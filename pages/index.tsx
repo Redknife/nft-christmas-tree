@@ -6,6 +6,7 @@ import {
   WalletMultiButton,
 } from '@solana/wallet-adapter-react-ui';
 import * as anchor from '@project-serum/anchor';
+import { PublicKey } from '@solana/web3.js'
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import { useCryptoElkaProgram } from 'hooks/useCryptoElkaProgram';
@@ -34,11 +35,11 @@ const loader = (
 );
 
 const Home: NextPage = () => {
-  const { wallet } = useWallet();
+  const { wallet, publicKey } = useWallet();
   const program = useCryptoElkaProgram();
 
   const [ballAccounts, setBallAccounts] = useState<
-    anchor.ProgramAccount<{ place: number; message: string }>[]
+    anchor.ProgramAccount<{ place: number; message: string, creator: PublicKey }>[]
   >([]);
   const [isBallAccountsLoading, setIsBallAccountsLoading] = useState(false);
   const fetchBallAccounts = useCallback(async () => {
@@ -73,7 +74,7 @@ const Home: NextPage = () => {
       const ballNftAccountKeys = anchor.web3.Keypair.generate();
 
       try {
-        const tx = await program.rpc.placeBall(placeNumber, message, {
+        await program.rpc.placeBall(placeNumber, message, {
           accounts: {
             ball: ballAccountKeys.publicKey,
             ballNft: ballNftAccountKeys.publicKey,
@@ -82,7 +83,6 @@ const Home: NextPage = () => {
           },
           signers: [ballAccountKeys, ballNftAccountKeys],
         });
-        console.log(tx);
         formRef.current?.reset();
         fetchBallAccounts();
       } catch (e) {
@@ -116,21 +116,24 @@ const Home: NextPage = () => {
             </h3>
 
             <div className="grid grid-cols-3 gap-3">
-              {ballAccounts.map(({ account }, index) => (
-                <div
-                  key={index}
-                  className="w-full p-6 bg-white rounded-xl shadow-lg flex items-center space-x-4"
-                >
-                  <div>
-                    <div className="text-xl font-medium text-black">
-                      {account.place}
+              {ballAccounts.map(({ account }, index) => {
+                const isMine = publicKey?.equals(account.creator);
+                return (
+                  <div
+                    key={index}
+                    className={`w-full p-6 ${isMine ? 'bg-green-50' : 'bg-white'} rounded-xl shadow-lg flex items-center space-x-4`}
+                  >
+                    <div>
+                      <div className="text-xl font-medium text-black">
+                        {account.place}
+                      </div>
+                      <p className="text-gray-500 m-0">
+                        {account.message || '-'}
+                      </p>
                     </div>
-                    <p className="text-gray-500 m-0">
-                      {account.message || '-'}
-                    </p>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <hr />
@@ -154,6 +157,7 @@ const Home: NextPage = () => {
                 type="text"
                 name="message"
                 placeholder="Message"
+                maxLength={280}
                 disabled={isSubmitting}
                 className="form-input text-black px-4 py-3 w-full rounded-md border-2 border-gray-300 focus:ring-green-400 focus:border-green-400"
                 required
