@@ -55,7 +55,7 @@ const Home: NextPage = () => {
   }, [program]);
   useEffect(() => {
     fetchBallAccounts();
-  }, [fetchBallAccounts]);
+  }, [fetchBallAccounts, wallet]);
 
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -107,32 +107,34 @@ const Home: NextPage = () => {
           <WalletDisconnectButton />
         </div>
 
-        <hr />
-        <h3 className="flex items-center">
-          Balls
-          {isBallAccountsLoading && loader}
-        </h3>
-
-        <div className="grid grid-cols-3 gap-3">
-          {ballAccounts.map(({ account }, index) => (
-            <div
-              key={index}
-              className="w-full p-6 bg-white rounded-xl shadow-lg flex items-center space-x-4"
-            >
-              <div>
-                <div className="text-xl font-medium text-black">
-                  {account.place}
-                </div>
-                <p className="text-gray-500 m-0">{account.message || '-'}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <hr />
-
         {wallet && (
           <>
+            <hr />
+            <h3 className="flex items-center">
+              Balls
+              {isBallAccountsLoading && loader}
+            </h3>
+
+            <div className="grid grid-cols-3 gap-3">
+              {ballAccounts.map(({ account }, index) => (
+                <div
+                  key={index}
+                  className="w-full p-6 bg-white rounded-xl shadow-lg flex items-center space-x-4"
+                >
+                  <div>
+                    <div className="text-xl font-medium text-black">
+                      {account.place}
+                    </div>
+                    <p className="text-gray-500 m-0">
+                      {account.message || '-'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <hr />
+
             <h3>Place the ball</h3>
             <form
               ref={formRef}
