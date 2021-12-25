@@ -1,3 +1,5 @@
+import '@solana/wallet-adapter-react-ui/styles.css';
+import { ReactNode, useMemo } from 'react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import {
@@ -10,7 +12,6 @@ import {
   getTorusWallet,
 } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
-import { FC, ReactNode, useMemo } from 'react';
 
 export const WalletConnectionProvider = ({ children }: { children: ReactNode }) => {
   // Can be set to 'devnet', 'testnet', or 'mainnet-beta'

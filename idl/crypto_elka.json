@@ -1,0 +1,81 @@
+{
+  "version": "0.1.0",
+  "name": "crypto_elka",
+  "instructions": [
+    {
+      "name": "placeBall",
+      "accounts": [
+        {
+          "name": "ball",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "creator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "ballNft",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "place",
+          "type": "u8"
+        },
+        {
+          "name": "message",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Ball",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "creator",
+            "type": "publicKey"
+          },
+          {
+            "name": "ball",
+            "type": "publicKey"
+          },
+          {
+            "name": "message",
+            "type": "string"
+          },
+          {
+            "name": "place",
+            "type": "u8"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "MessageTooLong",
+      "msg": "The provided message should be 280 characters long maximum."
+    }
+  ],
+  "metadata": {
+    "address": "P67cjVRgibTH2q6vrfvPPnLkmxjgrLHM4QJGBxFAJwh"
+  }
+}
